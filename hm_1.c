@@ -119,7 +119,7 @@ void merge(int* arr, int n, int left, int middle, int right){
     }
 
     for(int i = 0, j = 0, k = left; k <= right; k++){
-        if((i < left_length) && (j >= right_length || arr_left[i] < arr_right[j])){
+        if((i < left_length) && (j >= right_length || arr_left[i] > arr_right[j])){
             arr[k] = arr_left[i];
             i++;
         }
@@ -155,6 +155,51 @@ void check_repeated_number(int* arr, int n, int number){
     printf("In total %d numbers\n", count);
 }
 
+void delete_even_numbers(int* arr, int* n){
+    int odd_index = 0;
+    for(int i = 0; i < *n; i++){
+        if(arr[i] % 2 != 0){
+            arr[odd_index] = arr[i];
+            odd_index++;
+        }
+    }
+    *n = odd_index;
+}
+
+void delete_odd_numbers(int* arr, int* n){
+    int even_index = 0;
+    for(int i = 0; i < *n; i++){
+        if(arr[i] % 2 == 0){
+            arr[even_index] = arr[i];
+            even_index++;
+        }
+    }
+    *n = even_index;
+}
+
+void piramidal_sort(int* arr, int n){
+    int middle = n / 2;
+    int temp[n];
+
+    for(int i = 0; i < n; i++){
+        temp[i] = arr[i];
+    }
+
+    arr[middle] = temp[n - 1];
+    for(int i = middle - 1, j = middle + 1, k = n - 2; k >= 0;){
+        if(i >= 0){
+            arr[i] = temp[k];
+            k--;
+            i--;
+        }
+        if(j < n){
+            arr[j] = temp[k];
+            k--;
+            j++;
+        }
+    }
+}
+
 void printMenu() {
     printf("+--------------------------------------+\n");
     printf("|               Menu                   |\n");
@@ -166,7 +211,10 @@ void printMenu() {
     printf("| 4 - Bubble Sort in descending form   |\n");
     printf("| 5 - Quick Sort                       |\n");
     printf("| 6 - Find number using Binary search  |\n");
-    printf("| 7 - Print array                      |\n");
+    printf("| 7 - Find if number repeats in array  |\n");
+    printf("| 8 - Delete all even numbers          |\n");
+    printf("| 9 - Delete all odd numbers           |\n");
+    printf("| 10 - Pyramidal sort                  |\n");
     printf("+--------------------------------------+\n");
 }
 
@@ -187,8 +235,7 @@ int main() {
     scanf("%d", &k);
     switch(k){
         case 0:
-            goto start;
-            break;
+            return 0;
         case 1:
             printf("Input number of digits:");
             scanf("%d", &n);
@@ -203,7 +250,7 @@ int main() {
             scanf("%d", &n);
             arr = (int*)malloc(sizeof(int) * n);
             for(int i = 0; i < n; i++){
-            arr[i] = rand() % 200 - 100;
+            arr[i] = rand() % 11 - 0;
             }
             print_arr(arr, n);
             break;
@@ -250,10 +297,32 @@ int main() {
         binary_search(arr, n, number);
         break;
     case 7:
+        printf("Input number, which you want to check:");
+        scanf("%d", &number);
+        merge_sort(arr, n);
+        print_arr(arr, n);
+        check_repeated_number(arr, n, number);
+        break;
+    case 8:
+        delete_even_numbers(arr, &n);
+        print_arr(arr, n);
+        printf("\n");
+        merge_sort(arr, n);
+        print_arr(arr, n);
+        break;
+    case 9:
+        delete_odd_numbers(arr, &n);
+        print_arr(arr, n);
+        printf("\n");
+        quick_sort(arr, n);
+        print_arr(arr, n);
+        break;
+    case 10:
+        quick_sort(arr, n);
+        piramidal_sort(arr, n);
         print_arr(arr, n);
         break;
     }
     free(arr);
     goto start;
-    return 0;
 }
